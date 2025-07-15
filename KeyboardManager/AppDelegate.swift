@@ -15,7 +15,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         print("=== KeyboardManager Starting ===")
         
-        // Debug: Print the  app location 
+        func redirectOutputToFile() {
+            let logPath = "/tmp/keyboardmanager.log"
+            freopen(logPath, "a+", stdout)
+            freopen(logPath, "a+", stderr)
+        }
+        
+        // Debug: Print the  app location
         let appPath = Bundle.main.bundlePath
         print("App is located at: \(appPath)")
         print("Add this path to Accessibility permissions if needed")
@@ -46,6 +52,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         print("Starting monitoring...")
         // Start the monitoring of windows and input sources
         windowMonitor.startMonitoring()
+        if AXIsProcessTrusted() {
+            windowMonitor.startAXFocusMonitoring()
+        } else {
+            print("Accessibility not granted. Skipping AXFocusMonitoring until next launch.")
+        }
         
         print("KeyboardManager started successfully!")
     }
@@ -91,10 +102,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 item.target = self
                 item.representedObject = inputSource
                 
-                // Mark current default with checkmark
-//                if id == currentDefaultID {
-//                    item.state = .on
-//                }
                 if id.trimmingCharacters(in: .whitespacesAndNewlines) == currentDefaultID?.trimmingCharacters(in: .whitespacesAndNewlines) {
                     item.state = .on
                 }
@@ -208,6 +215,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         return nil
     }
+    
     
     // Prompts the user for accessibility permissions if not granted
     func requestAccessibilityPermissions() {
@@ -396,26 +404,25 @@ protocol WindowMonitorDelegate: AnyObject {
 class WindowMonitor {
     weak var delegate: WindowMonitorDelegate?
     var isPerApplication = false
-    var defaultInputSource: TISInputSource? // Default input source for new apps
-    var isCurrentlySwitching = false // Flag to prevent race conditions during automatic switching
+    var defaultInputSource: TISInputSource?
+    var isCurrentlySwitching = false
     
-    // Thread-safe storage for input source mappings per identifier
+
     private let mappingQueue = DispatchQueue(label: "com.keyboardmanager.mappings", attributes: .concurrent)
     private var _inputSourceMappings: [String: TISInputSource] = [:]
-    private var currentIdentifier: String? // The current focused identifier
+    private var currentIdentifier: String?
     
-    // Application monitoring
     private var runningApps: [String: NSRunningApplication] = [:]
-    
+    private var axObserver: AXObserver?
+    private var observedAppElement: AXUIElement?
+
+
     deinit {
-        // Ensure observers are properly removed to prevent leaks
         NSWorkspace.shared.notificationCenter.removeObserver(self)
         DistributedNotificationCenter.default().removeObserver(self)
     }
-    
-    // Registers for notifications to monitor app focus, termination, and input source changes
+
     func startMonitoring() {
-        // Monitor active application changes
         NSWorkspace.shared.notificationCenter.addObserver(
             self,
             selector: #selector(applicationDidActivate),
@@ -423,7 +430,6 @@ class WindowMonitor {
             object: nil
         )
         
-        // Monitor application termination
         NSWorkspace.shared.notificationCenter.addObserver(
             self,
             selector: #selector(applicationDidTerminate),
@@ -431,7 +437,6 @@ class WindowMonitor {
             object: nil
         )
         
-        // Monitor input source changes
         DistributedNotificationCenter.default().addObserver(
             self,
             selector: #selector(inputSourceDidChange),
@@ -439,109 +444,257 @@ class WindowMonitor {
             object: nil
         )
         
-        print("Started monitoring applications and input source changes")
+        print("NSWorkspace monitoring started")
     }
+
+    func startAXFocusMonitoring() {
+        print("Initializing AX focus monitoring...")
+
+        var observer: AXObserver?
+        let pid = getpid()
+
+        // Create AXObserver
+        let result = AXObserverCreate(pid, { observer, element, notification, context in
+            let monitor = Unmanaged<WindowMonitor>.fromOpaque(context!).takeUnretainedValue()
+            print("AX callback received: \(notification)")
+            monitor.handleAXFocusChange()
+        }, &observer)
+
+        guard result == .success, let axObserver = observer else {
+            print("❌ Failed to create AXObserver: \(result.rawValue)")
+            return
+        }
+
+        self.axObserver = axObserver
+
+        // Add AXObserver to run loop
+        CFRunLoopAddSource(
+            CFRunLoopGetCurrent(),
+            AXObserverGetRunLoopSource(axObserver),
+            .defaultMode
+        )
+
+        // Get the currently focused app
+        let systemElement = AXUIElementCreateSystemWide()
+        var focusedApp: AnyObject?
+
+        let err = AXUIElementCopyAttributeValue(systemElement, kAXFocusedApplicationAttribute as CFString, &focusedApp)
+
+        guard err == .success,
+              let appElement = focusedApp,
+              CFGetTypeID(appElement) == AXUIElementGetTypeID() else {
+            print("❌ Unable to get focused app AX element")
+            return
+        }
+
+        let appAXElement = appElement as! AXUIElement
+        let context = Unmanaged.passUnretained(self).toOpaque()
+
+        let addResult = AXObserverAddNotification(axObserver, appAXElement, kAXFocusedUIElementChangedNotification as CFString, context)
+
+        if addResult == .success {
+            print("✅ Successfully added AX notification to focused app")
+        } else {
+            print("❌ Failed to add AX notification: \(addResult.rawValue)")
+        }
+    }
+
+
     
-    // Handler for app activation (focus change)
+//    func startAXFocusMonitoring() {
+//        var observer: AXObserver?
+//        let pid = getpid()
+//
+//        let result = AXObserverCreate(pid, { observer, element, notification, context in
+//            let monitor = Unmanaged<WindowMonitor>.fromOpaque(context!).takeUnretainedValue()
+//            monitor.handleAXFocusChange()
+//        }, &observer)
+//
+//        guard result == .success, let axObserver = observer else {
+//            print("Failed to create AXObserver: \(result.rawValue)")
+//            return
+//        }
+//
+//        self.axObserver = axObserver
+//
+//        let unmanagedSelf = Unmanaged.passUnretained(self).toOpaque()
+//
+//        // Get the focused application element
+//        let systemElement = AXUIElementCreateSystemWide()
+//        var focusedApp: AnyObject?
+//        let errApp = AXUIElementCopyAttributeValue(systemElement, kAXFocusedApplicationAttribute as CFString, &focusedApp)
+//
+//        guard errApp == .success,
+//              let appElement = focusedApp,
+//              CFGetTypeID(appElement) == AXUIElementGetTypeID() else {
+//            print("Focused app is not a valid AXUIElement")
+//            return
+//        }
+//
+//        let appAXElement = appElement as! AXUIElement
+//
+//        // Register notification
+//        let addResult = AXObserverAddNotification(axObserver, appAXElement, kAXFocusedUIElementChangedNotification as CFString, unmanagedSelf)
+//        if addResult != .success {
+//            print("Failed to add AX notification: \(addResult.rawValue)")
+//            return
+//        }
+//
+//        // Attach to run loop
+//        CFRunLoopAddSource(
+//            CFRunLoopGetCurrent(),
+//            AXObserverGetRunLoopSource(axObserver),
+//            .defaultMode
+//        )
+//
+//        print("AX focus monitoring started on currently focused app")
+//    }
+
+
+    private func handleAXFocusChange() {
+        let systemElement = AXUIElementCreateSystemWide()
+
+        var focusedApp: AnyObject?
+        let errApp = AXUIElementCopyAttributeValue(systemElement, kAXFocusedApplicationAttribute as CFString, &focusedApp)
+
+        guard errApp == .success, let appElement = focusedApp,
+              CFGetTypeID(appElement) == AXUIElementGetTypeID() else {
+            print("Focused app is not an AXUIElement")
+            return
+        }
+
+        let appAXElement = appElement as! AXUIElement
+
+        var pid: pid_t = 0
+        AXUIElementGetPid(appAXElement, &pid)
+
+        guard let app = NSRunningApplication(processIdentifier: pid) else {
+            print("Could not find running application for pid: \(pid)")
+            return
+        }
+
+        let identifier = createIdentifier(for: app)
+
+        if currentIdentifier != identifier {
+            print("AX focus changed from \(currentIdentifier ?? "none") to \(identifier)")
+            currentIdentifier = identifier
+            delegate?.windowDidChange(identifier: identifier)
+        }
+    }
+
+    
+    func updateAXObserver(for app: NSRunningApplication) {
+        guard let axObserver = self.axObserver else {
+            print("AXObserver not initialized")
+            return
+        }
+
+        let pid = app.processIdentifier
+        let appElement = AXUIElementCreateApplication(pid)
+        let unmanagedSelf = Unmanaged.passUnretained(self).toOpaque()
+
+        let trusted = AXIsProcessTrusted()
+        print("AXIsProcessTrusted: \(trusted)")
+
+        var trustedWithPrompt = AXIsProcessTrustedWithOptions([
+            kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: false
+        ] as CFDictionary)
+        print("AXIsProcessTrustedWithOptions (no prompt): \(trustedWithPrompt)")
+
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            let addResult = AXObserverAddNotification(axObserver, appElement, kAXFocusedUIElementChangedNotification as CFString, unmanagedSelf)
+
+            DispatchQueue.main.async {
+                if addResult == .success {
+                    print("✅ Registered AX notification for: \(app.localizedName ?? app.bundleIdentifier ?? "Unknown")")
+                    self.observedAppElement = appElement
+                } else {
+                    print("❌ Failed to add AX notification for app \(app.localizedName ?? app.bundleIdentifier ?? "unknown"): \(addResult.rawValue)")
+                }
+            }
+        }
+    }
+
+
     @objc func applicationDidActivate(_ notification: Notification) {
         guard let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication else { return }
-        
+
         let identifier = createIdentifier(for: app)
-        
-        // Store reference to running app for later cleanup
         runningApps[identifier] = app
-        
-        // Only process if this is a different identifier
+
         if currentIdentifier != identifier {
             print("Application focus changed from \(currentIdentifier ?? "none") to \(identifier)")
             currentIdentifier = identifier
-            
-            // Small delay to ensure the window focus change is complete
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self] in
                 self?.delegate?.windowDidChange(identifier: identifier)
             }
         }
+
+        // Update AX focus observer for new app
+        updateAXObserver(for: app)
     }
-    
-    // Handler for app termination, cleans up mappings
+
+
     @objc func applicationDidTerminate(_ notification: Notification) {
         guard let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication else { return }
-        
         let identifier = createIdentifier(for: app)
-        
-        // Remove from running apps
+
         runningApps.removeValue(forKey: identifier)
-        
-        // Clear mapping for this identifier
         delegate?.windowDidClose(identifier: identifier)
     }
-    
-    // Handler for keyboard input source changes
+
     @objc func inputSourceDidChange(_ notification: Notification) {
-        // Add delay to prevent race conditions with window switching
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            guard let self = self else { return }
-            
-            // Only update mapping if we're not in the middle of switching
-            guard !self.isCurrentlySwitching else {
-                print("Ignoring input source change during automatic switching")
+            guard let self = self, !self.isCurrentlySwitching else {
+                print("Ignoring input source change during switching")
                 return
             }
-            
+
             guard let currentId = self.currentIdentifier else { return }
-            
-            // Get new input source and update mapping
+
             if let inputSourceManager = (self.delegate as? AppDelegate)?.inputSourceManager,
                let newInputSource = inputSourceManager.getCurrentInputSource() {
                 
-                // Update stored mapping for current identifier
                 self.setInputSource(newInputSource, for: currentId)
-                
+
                 if let name = inputSourceManager.getInputSourceName(newInputSource) {
                     print("Input source manually changed to: \(name) for \(currentId)")
                 }
             }
         }
     }
-    
-    // Creates a string identifier for app or window, based on mode
+
     private func createIdentifier(for app: NSRunningApplication) -> String {
         let bundleID = app.bundleIdentifier ?? "unknown"
-        
         if isPerApplication {
-            // Use only bundle ID for per-app mode
             return bundleID
         } else {
-            // For per-window mode, include process ID for better uniqueness
-            // Note: This still has limitations - true per-window would require Accessibility API
             return "\(bundleID)-\(app.processIdentifier)"
         }
     }
-    
-    // Thread-safe getter for input source mapping
+
     func getInputSource(for identifier: String) -> TISInputSource? {
         return mappingQueue.sync {
             return _inputSourceMappings[identifier]
         }
     }
-    
-    // Thread-safe setter for input source mapping
+
     func setInputSource(_ inputSource: TISInputSource, for identifier: String) {
         mappingQueue.async(flags: .barrier) { [weak self] in
             self?._inputSourceMappings[identifier] = inputSource
         }
         print("Stored input source for: \(identifier)")
     }
-    
-    // Thread-safe removal of mapping for an identifier
+
     func removeMapping(for identifier: String) {
         mappingQueue.async(flags: .barrier) { [weak self] in
             self?._inputSourceMappings.removeValue(forKey: identifier)
         }
         print("Removed mapping for: \(identifier)")
     }
-    
-    // Thread-safe clears all mappings
+
     func clearMappings() {
         mappingQueue.async(flags: .barrier) { [weak self] in
             self?._inputSourceMappings.removeAll()
