@@ -7,7 +7,7 @@
 
 import XCTest
 
-final class KeyboardManagerUITestsLaunchTests: XCTestCase {
+final class KeyMinderUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

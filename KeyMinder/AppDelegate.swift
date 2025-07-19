@@ -138,7 +138,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         if let button = statusItem?.button {
             // Use SF Symbol for keyboard icon
-            button.image = NSImage(systemSymbolName: "keyboard", accessibilityDescription: "KeyboardManager")
+            if let customImage = NSImage(named: "32.png") {
+                    button.image = customImage
+                } else {
+                    // Fallback to system symbol if custom image fails to load
+                    button.image = NSImage(systemSymbolName: "keyboard", accessibilityDescription: "KeyMinder")
+                }
             button.action = #selector(statusBarButtonClicked)
             button.target = self
         }

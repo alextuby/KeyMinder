@@ -24,38 +24,38 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		634DBFAA2E1D3FDC001B32ED /* InputSwitcher Pro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "InputSwitcher Pro.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		634DBFBB2E1D3FDD001B32ED /* InputSwitcher ProTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "InputSwitcher ProTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		634DBFC52E1D3FDD001B32ED /* InputSwitcher ProUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "InputSwitcher ProUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		634DBFAA2E1D3FDC001B32ED /* KeyMinder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KeyMinder.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		634DBFBB2E1D3FDD001B32ED /* KeyMinderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KeyMinderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		634DBFC52E1D3FDD001B32ED /* KeyMinderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KeyMinderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		634DBFD92E1D445D001B32ED /* Exceptions for "InputSwitcherPro" folder in "InputSwitcher Pro" target */ = {
+		634DBFD92E1D445D001B32ED /* Exceptions for "KeyMinder" folder in "KeyMinder" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 634DBFA92E1D3FDC001B32ED /* InputSwitcher Pro */;
+			target = 634DBFA92E1D3FDC001B32ED /* KeyMinder */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		634DBFAC2E1D3FDC001B32ED /* InputSwitcherPro */ = {
+		634DBFAC2E1D3FDC001B32ED /* KeyMinder */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				634DBFD92E1D445D001B32ED /* Exceptions for "InputSwitcherPro" folder in "InputSwitcher Pro" target */,
+				634DBFD92E1D445D001B32ED /* Exceptions for "KeyMinder" folder in "KeyMinder" target */,
 			);
-			path = InputSwitcherPro;
+			path = KeyMinder;
 			sourceTree = "<group>";
 		};
-		634DBFBE2E1D3FDD001B32ED /* InputSwitcherProTests */ = {
+		634DBFBE2E1D3FDD001B32ED /* KeyMinderTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = InputSwitcherProTests;
+			path = KeyMinderTests;
 			sourceTree = "<group>";
 		};
-		634DBFC82E1D3FDD001B32ED /* InputSwitcherProUITests */ = {
+		634DBFC82E1D3FDD001B32ED /* KeyMinderUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = InputSwitcherProUITests;
+			path = KeyMinderUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -88,9 +88,9 @@
 		634DBFA12E1D3FDC001B32ED = {
 			isa = PBXGroup;
 			children = (
-				634DBFAC2E1D3FDC001B32ED /* InputSwitcherPro */,
-				634DBFBE2E1D3FDD001B32ED /* InputSwitcherProTests */,
-				634DBFC82E1D3FDD001B32ED /* InputSwitcherProUITests */,
+				634DBFAC2E1D3FDC001B32ED /* KeyMinder */,
+				634DBFBE2E1D3FDD001B32ED /* KeyMinderTests */,
+				634DBFC82E1D3FDD001B32ED /* KeyMinderUITests */,
 				634DBFAB2E1D3FDC001B32ED /* Products */,
 			);
 			sourceTree = "<group>";
@@ -98,9 +98,9 @@
 		634DBFAB2E1D3FDC001B32ED /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				634DBFAA2E1D3FDC001B32ED /* InputSwitcher Pro.app */,
-				634DBFBB2E1D3FDD001B32ED /* InputSwitcher ProTests.xctest */,
-				634DBFC52E1D3FDD001B32ED /* InputSwitcher ProUITests.xctest */,
+				634DBFAA2E1D3FDC001B32ED /* KeyMinder.app */,
+				634DBFBB2E1D3FDD001B32ED /* KeyMinderTests.xctest */,
+				634DBFC52E1D3FDD001B32ED /* KeyMinderUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -108,9 +108,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		634DBFA92E1D3FDC001B32ED /* InputSwitcher Pro */ = {
+		634DBFA92E1D3FDC001B32ED /* KeyMinder */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 634DBFCF2E1D3FDD001B32ED /* Build configuration list for PBXNativeTarget "InputSwitcher Pro" */;
+			buildConfigurationList = 634DBFCF2E1D3FDD001B32ED /* Build configuration list for PBXNativeTarget "KeyMinder" */;
 			buildPhases = (
 				634DBFA62E1D3FDC001B32ED /* Sources */,
 				634DBFA72E1D3FDC001B32ED /* Frameworks */,
@@ -121,18 +121,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				634DBFAC2E1D3FDC001B32ED /* InputSwitcherPro */,
+				634DBFAC2E1D3FDC001B32ED /* KeyMinder */,
 			);
-			name = "InputSwitcher Pro";
+			name = KeyMinder;
 			packageProductDependencies = (
 			);
 			productName = KeyboardManager;
-			productReference = 634DBFAA2E1D3FDC001B32ED /* InputSwitcher Pro.app */;
+			productReference = 634DBFAA2E1D3FDC001B32ED /* KeyMinder.app */;
 			productType = "com.apple.product-type.application";
 		};
-		634DBFBA2E1D3FDD001B32ED /* InputSwitcher ProTests */ = {
+		634DBFBA2E1D3FDD001B32ED /* KeyMinderTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 634DBFD22E1D3FDD001B32ED /* Build configuration list for PBXNativeTarget "InputSwitcher ProTests" */;
+			buildConfigurationList = 634DBFD22E1D3FDD001B32ED /* Build configuration list for PBXNativeTarget "KeyMinderTests" */;
 			buildPhases = (
 				634DBFB72E1D3FDD001B32ED /* Sources */,
 				634DBFB82E1D3FDD001B32ED /* Frameworks */,
@@ -144,18 +144,18 @@
 				634DBFBD2E1D3FDD001B32ED /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				634DBFBE2E1D3FDD001B32ED /* InputSwitcherProTests */,
+				634DBFBE2E1D3FDD001B32ED /* KeyMinderTests */,
 			);
-			name = "InputSwitcher ProTests";
+			name = KeyMinderTests;
 			packageProductDependencies = (
 			);
 			productName = KeyboardManagerTests;
-			productReference = 634DBFBB2E1D3FDD001B32ED /* InputSwitcher ProTests.xctest */;
+			productReference = 634DBFBB2E1D3FDD001B32ED /* KeyMinderTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		634DBFC42E1D3FDD001B32ED /* InputSwitcher ProUITests */ = {
+		634DBFC42E1D3FDD001B32ED /* KeyMinderUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 634DBFD52E1D3FDD001B32ED /* Build configuration list for PBXNativeTarget "InputSwitcher ProUITests" */;
+			buildConfigurationList = 634DBFD52E1D3FDD001B32ED /* Build configuration list for PBXNativeTarget "KeyMinderUITests" */;
 			buildPhases = (
 				634DBFC12E1D3FDD001B32ED /* Sources */,
 				634DBFC22E1D3FDD001B32ED /* Frameworks */,
@@ -167,13 +167,13 @@
 				634DBFC72E1D3FDD001B32ED /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				634DBFC82E1D3FDD001B32ED /* InputSwitcherProUITests */,
+				634DBFC82E1D3FDD001B32ED /* KeyMinderUITests */,
 			);
-			name = "InputSwitcher ProUITests";
+			name = KeyMinderUITests;
 			packageProductDependencies = (
 			);
 			productName = KeyboardManagerUITests;
-			productReference = 634DBFC52E1D3FDD001B32ED /* InputSwitcher ProUITests.xctest */;
+			productReference = 634DBFC52E1D3FDD001B32ED /* KeyMinderUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -199,7 +199,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 634DBFA52E1D3FDC001B32ED /* Build configuration list for PBXProject "InputSwitcher Pro" */;
+			buildConfigurationList = 634DBFA52E1D3FDC001B32ED /* Build configuration list for PBXProject "KeyMinder" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -213,9 +213,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				634DBFA92E1D3FDC001B32ED /* InputSwitcher Pro */,
-				634DBFBA2E1D3FDD001B32ED /* InputSwitcher ProTests */,
-				634DBFC42E1D3FDD001B32ED /* InputSwitcher ProUITests */,
+				634DBFA92E1D3FDC001B32ED /* KeyMinder */,
+				634DBFBA2E1D3FDD001B32ED /* KeyMinderTests */,
+				634DBFC42E1D3FDD001B32ED /* KeyMinderUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -271,12 +271,12 @@
 /* Begin PBXTargetDependency section */
 		634DBFBD2E1D3FDD001B32ED /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 634DBFA92E1D3FDC001B32ED /* InputSwitcher Pro */;
+			target = 634DBFA92E1D3FDC001B32ED /* KeyMinder */;
 			targetProxy = 634DBFBC2E1D3FDD001B32ED /* PBXContainerItemProxy */;
 		};
 		634DBFC72E1D3FDD001B32ED /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 634DBFA92E1D3FDC001B32ED /* InputSwitcher Pro */;
+			target = 634DBFA92E1D3FDC001B32ED /* KeyMinder */;
 			targetProxy = 634DBFC62E1D3FDD001B32ED /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -405,14 +405,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = KeyboardManager/KeyboardManager.entitlements;
+				CODE_SIGN_ENTITLEMENTS = KeyMinder/KeyMinder.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = KeyboardManager/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "InputSwitcher Pro";
+				INFOPLIST_FILE = KeyMinder/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = KeyMinder;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -424,7 +424,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "alextuby.InputSwitcher-Pro";
+				PRODUCT_BUNDLE_IDENTIFIER = alextuby.KeyMinder;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -437,14 +437,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = KeyboardManager/KeyboardManager.entitlements;
+				CODE_SIGN_ENTITLEMENTS = KeyMinder/KeyMinder.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = KeyboardManager/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "InputSwitcher Pro";
+				INFOPLIST_FILE = KeyMinder/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = KeyMinder;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -456,7 +456,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "alextuby.InputSwitcher-Pro";
+				PRODUCT_BUNDLE_IDENTIFIER = alextuby.KeyMinder;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -477,7 +477,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/InputSwitcher Pro.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/InputSwitcher Pro";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KeyMinder.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/KeyMinder";
 			};
 			name = Debug;
 		};
@@ -494,7 +494,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/InputSwitcher Pro.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/InputSwitcher Pro";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KeyMinder.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/KeyMinder";
 			};
 			name = Release;
 		};
@@ -531,7 +531,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		634DBFA52E1D3FDC001B32ED /* Build configuration list for PBXProject "InputSwitcher Pro" */ = {
+		634DBFA52E1D3FDC001B32ED /* Build configuration list for PBXProject "KeyMinder" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				634DBFCD2E1D3FDD001B32ED /* Debug */,
@@ -540,7 +540,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		634DBFCF2E1D3FDD001B32ED /* Build configuration list for PBXNativeTarget "InputSwitcher Pro" */ = {
+		634DBFCF2E1D3FDD001B32ED /* Build configuration list for PBXNativeTarget "KeyMinder" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				634DBFD02E1D3FDD001B32ED /* Debug */,
@@ -549,7 +549,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		634DBFD22E1D3FDD001B32ED /* Build configuration list for PBXNativeTarget "InputSwitcher ProTests" */ = {
+		634DBFD22E1D3FDD001B32ED /* Build configuration list for PBXNativeTarget "KeyMinderTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				634DBFD32E1D3FDD001B32ED /* Debug */,
@@ -558,7 +558,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		634DBFD52E1D3FDD001B32ED /* Build configuration list for PBXNativeTarget "InputSwitcher ProUITests" */ = {
+		634DBFD52E1D3FDD001B32ED /* Build configuration list for PBXNativeTarget "KeyMinderUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				634DBFD62E1D3FDD001B32ED /* Debug */,
