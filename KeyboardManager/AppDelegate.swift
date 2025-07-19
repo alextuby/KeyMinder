@@ -20,9 +20,6 @@ private func accessibilityFocusChangeCallback(
     // Ensure this is the correct notification and dispatch to main thread for processing
     if notification == kAXFocusedUIElementChangedNotification as CFString {
             DispatchQueue.main.async {
-                // 'element' is the newly focused UI element within the observed application.
-                // We pass the observer and element so the monitor can identify which app
-                // the focus change originated from.
                 monitor.handleFocusChange(observedElement: element, for: observer)
             }
         }
@@ -77,10 +74,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         print("Starting monitoring...")
         // Start the monitoring of windows and input sources
         windowMonitor.startMonitoring()
-        if AXIsProcessTrusted() {
-                windowMonitor.startAXFocusMonitoring() // This call now handles system-wide window focus
-            } else {
-                print("Accessibility not granted. Skipping AXFocusMonitoring until next launch.")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                if AXIsProcessTrusted() {
+                    self.windowMonitor.startAXFocusMonitoring()
+                } else {
+                    print("Accessibility not granted. Skipping AXFocusMonitoring until next launch.")
+                }
             }
         
         print("KeyboardManager started successfully!")
@@ -415,6 +414,7 @@ class InputSourceManager {
     // Switches to the given input source, handling race condition flag
     func switchToInputSource(_ inputSource: TISInputSource) {
         // Set flag to prevent race conditions
+        print("🔄 switchToInputSource called")
         if let windowMonitor = (NSApp.delegate as? AppDelegate)?.windowMonitor {
             windowMonitor.isCurrentlySwitching = true
         }
@@ -477,6 +477,7 @@ class WindowMonitor {
     var isPerApplication = false
     var defaultInputSource: TISInputSource?
     var isCurrentlySwitching = false
+    var isFirstManualSwitch = true
     var expectedInputSourceID: String?
     
 
@@ -517,10 +518,43 @@ class WindowMonitor {
             name: NSNotification.Name(kTISNotifySelectedKeyboardInputSourceChanged as String),
             object: nil
         )
+            
         
         print("NSWorkspace monitoring started")
     }
 
+    
+    private func primeNotificationSystem() {
+        print("🔧 Priming notification system...")
+        
+        guard let inputSourceManager = (delegate as? AppDelegate)?.inputSourceManager,
+              let currentSource = inputSourceManager.getCurrentInputSource() else {
+            print("🔧 ❌ Cannot prime - no input source manager")
+            return
+        }
+        
+        // Get all input sources
+        let allSources = inputSourceManager.getAllInputSources()
+        
+        // Find a different input source to switch to temporarily
+        if let otherSource = allSources.first(where: { source in
+            inputSourceManager.getInputSourceID(source) != inputSourceManager.getInputSourceID(currentSource)
+        }) {
+            print("🔧 Switching to different input source temporarily to prime notifications")
+            
+            // Switch away and back to prime the notification system
+            TISSelectInputSource(otherSource)
+            
+            // Switch back after a short delay
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                TISSelectInputSource(currentSource)
+                print("🔧 Notification system primed - returned to original input source")
+            }
+        } else {
+            print("🔧 Only one input source available - cannot prime")
+        }
+    }
+    
     func startAXFocusMonitoring() {
             print("Initializing AX focus monitoring for per-application changes...")
             // Register for application launch notification to add observers for new apps
@@ -591,6 +625,10 @@ class WindowMonitor {
                 print("AX Focus changed from \(currentIdentifier ?? "none") to \(newIdentifier)")
                 currentIdentifier = newIdentifier
                 delegate?.windowDidChange(identifier: newIdentifier)
+            }
+            if isFirstManualSwitch == true {
+                self.primeNotificationSystem()
+                isFirstManualSwitch = false
             }
         }
 
@@ -703,6 +741,12 @@ class WindowMonitor {
         }
 
     @objc func inputSourceDidChange(_ notification: Notification) {
+        print("🔔 inputSourceDidChange called! Notification object: \(notification)")
+
+        if isCurrentlySwitching {
+                print("Ignoring input source change (currently switching programmatically)")
+                return
+            }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             guard let self = self else { return }
             print("Change of the input source detected")
