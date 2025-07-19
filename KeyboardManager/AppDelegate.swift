@@ -3,7 +3,10 @@ import Carbon
 import ApplicationServices
 
 
-// Global C function outside of the class
+// This functino catches all focus change notifications for apps
+// we subscribe to below.
+// It then launches the handleFocusChange function that figures out
+// what to do next.
 private func accessibilityFocusChangeCallback(
     observer: AXObserver,
     element: AXUIElement, // This will be the system-wide element
@@ -39,6 +42,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // Called on app launch
     func applicationDidFinishLaunching(_ notification: Notification) {
         print("=== KeyboardManager Starting ===")
+        if let window = NSApplication.shared.windows.first {
+                window.setIsVisible(false)
+            }
         testAccessibilitySetup()
         // Debug: Print the  app location
         let appPath = Bundle.main.bundlePath
@@ -80,6 +86,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         print("KeyboardManager started successfully!")
     }
     
+    // Test functions that I used to figure out what's possible in terms of
+    // subscriptions. I kept it just in case for the future.
     func testAccessibilitySetup() {
         print("--- Running Accessibility Setup Test ---")
         // Use the explicit prompt to be sure
@@ -109,6 +117,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         print("[TEST] Observer added to current run loop.")
 
         // 3. Add Notification (The failing step)
+        // Unfortunatelly I wasn't able to add system wide notifications
+        // to an observer. Doesn't seem to be possible or I don't
+        // know how. I had to subscribe to every app instead. But kept this
+        // for future. Maybe someone else will figure this out.
         let systemElement = AXUIElementCreateSystemWide()
         let notification = kAXFocusedUIElementChangedNotification as CFString
         let addResult = AXObserverAddNotification(observer, systemElement, notification, nil)
@@ -386,7 +398,6 @@ class InputSourceManager {
             return false
         }
         
-        // FIXED: Safe casting using CFString comparison
         let categoryString = Unmanaged<CFString>.fromOpaque(category).takeUnretainedValue()
         let targetCategory = kTISCategoryKeyboardInputSource
         
@@ -437,7 +448,6 @@ class InputSourceManager {
             return nil
         }
         
-        // FIXED: Safe casting using CFString
         let cfString = Unmanaged<CFString>.fromOpaque(nameProperty).takeUnretainedValue()
         return cfString as String
     }
@@ -448,7 +458,6 @@ class InputSourceManager {
             return nil
         }
         
-        // FIXED: Safe casting using CFString
         let cfString = Unmanaged<CFString>.fromOpaque(idProperty).takeUnretainedValue()
         return cfString as String
     }
@@ -474,9 +483,7 @@ class WindowMonitor {
     private let mappingQueue = DispatchQueue(label: "com.keyboardmanager.mappings", attributes: .concurrent)
     private var _inputSourceMappings: [String: TISInputSource] = [:]
     private var currentIdentifier: String?
-    
-    // Running apps list might still be useful for termination events, but not for focus directly.
-//    private var runningApps: [String: NSRunningApplication] = [:]
+
     private var appObservers: [pid_t: AXObserver] = [:]
     private var activeAppPIDs: Set<pid_t> = []
     var systemWideObserver: AXObserver?
@@ -486,7 +493,6 @@ class WindowMonitor {
     deinit {
         NSWorkspace.shared.notificationCenter.removeObserver(self)
         DistributedNotificationCenter.default().removeObserver(self)
-        // NEW: Stop AX monitoring on deinit
         stopAXFocusMonitoring()
     }
 
@@ -517,7 +523,6 @@ class WindowMonitor {
 
     func startAXFocusMonitoring() {
             print("Initializing AX focus monitoring for per-application changes...")
-//            startSystemWideObserver()
             // Register for application launch notification to add observers for new apps
             NSWorkspace.shared.notificationCenter.addObserver(
                 self,
