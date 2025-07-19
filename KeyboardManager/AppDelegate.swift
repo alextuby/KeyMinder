@@ -479,8 +479,8 @@ class WindowMonitor {
 //    private var runningApps: [String: NSRunningApplication] = [:]
     private var appObservers: [pid_t: AXObserver] = [:]
     private var activeAppPIDs: Set<pid_t> = []
-//    private var axObserver: AXObserver?
-//    private let systemWideElement = AXUIElementCreateSystemWide()
+    var systemWideObserver: AXObserver?
+    private let systemWideElement = AXUIElementCreateSystemWide()
 
 
     deinit {
@@ -517,7 +517,7 @@ class WindowMonitor {
 
     func startAXFocusMonitoring() {
             print("Initializing AX focus monitoring for per-application changes...")
-
+//            startSystemWideObserver()
             // Register for application launch notification to add observers for new apps
             NSWorkspace.shared.notificationCenter.addObserver(
                 self,
@@ -525,17 +525,26 @@ class WindowMonitor {
                 name: NSWorkspace.didLaunchApplicationNotification,
                 object: nil
             )
-
+            
             // Add observers for all currently running applications
-            for app in NSWorkspace.shared.runningApplications {
-                if app.activationPolicy == .regular { // Only monitor regular applications
-                    addAXObserver(for: app)
+        for app in NSWorkspace.shared.runningApplications {
+                    // Monitor regular apps and accessory apps (includes menubar apps)
+                    if app.activationPolicy == .regular || app.activationPolicy == .accessory {
+                        addAXObserver(for: app)
+                    }
                 }
-            }
             print("AX focus monitoring initialized for existing applications.")
         }
     
     func stopAXFocusMonitoring() {
+        if let observer = systemWideObserver {
+            let notification = kAXFocusedUIElementChangedNotification as CFString
+            AXObserverRemoveNotification(observer, systemWideElement, notification)
+            CFRunLoopRemoveSource(CFRunLoopGetCurrent(), AXObserverGetRunLoopSource(observer), .defaultMode)
+            systemWideObserver = nil
+        }
+        
+        
             // Remove observer for application launch notifications
             NSWorkspace.shared.notificationCenter.removeObserver(
                 self,
@@ -626,7 +635,13 @@ class WindowMonitor {
                 // Observer already exists for this PID
                 return
             }
-
+            
+        
+        // Skip prohibited apps (like loginwindow)
+            guard app.activationPolicy != .prohibited else {
+            return
+            }
+        
             var observer: AXObserver?
             let context = Unmanaged.passUnretained(self).toOpaque()
 
