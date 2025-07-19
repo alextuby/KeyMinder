@@ -1,0 +1,125 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with modern gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="keyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.95" />
+      <stop offset="100%" style="stop-color:#f8f9fa;stop-opacity:0.9" />
+    </linearGradient>
+    
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ee5a24;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Subtle shadow filter -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="rgba(0,0,0,0.15)"/>
+    </filter>
+    
+    <!-- Inner shadow for keys -->
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.08)"/>
+    </filter>
+  </defs>
+  
+  <!-- Main background circle with subtle border -->
+  <circle cx="512" cy="512" r="480" fill="url(#bgGradient)" stroke="rgba(255,255,255,0.1)" stroke-width="4"/>
+  
+  <!-- Keyboard base -->
+  <rect x="180" y="400" width="664" height="280" rx="40" ry="40" fill="rgba(255,255,255,0.08)" filter="url(#shadow)"/>
+  
+  <!-- Keyboard rows -->
+  <!-- Top row (numbers) -->
+  <rect x="220" y="440" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="280" y="440" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="340" y="440" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="400" y="440" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="460" y="440" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="520" y="440" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="580" y="440" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="640" y="440" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="700" y="440" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="760" y="440" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  
+  <!-- Second row -->
+  <rect x="220" y="495" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="280" y="495" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="340" y="495" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="400" y="495" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="460" y="495" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="520" y="495" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="580" y="495" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="640" y="495" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="700" y="495" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="760" y="495" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  
+  <!-- Third row -->
+  <rect x="240" y="550" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="300" y="550" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="360" y="550" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="420" y="550" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="480" y="550" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="540" y="550" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="600" y="550" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="660" y="550" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="720" y="550" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  
+  <!-- Bottom row -->
+  <rect x="260" y="605" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="320" y="605" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="380" y="605" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="440" y="605" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="500" y="605" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="560" y="605" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="620" y="605" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  <rect x="680" y="605" width="50" height="45" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  
+  <!-- Spacebar -->
+  <rect x="340" y="660" width="280" height="35" rx="8" ry="8" fill="url(#keyGradient)" filter="url(#innerShadow)"/>
+  
+  <!-- Language indicators on special keys -->
+  <!-- Left key with "EN" -->
+  <rect x="280" y="550" width="70" height="45" rx="8" ry="8" fill="url(#accentGradient)" filter="url(#innerShadow)"/>
+  <text x="315" y="580" text-anchor="middle" fill="white" font-family="SF Pro Display, -apple-system, sans-serif" font-size="18" font-weight="600">EN</text>
+  
+  <!-- Right key with different script -->
+  <rect x="630" y="550" width="70" height="45" rx="8" ry="8" fill="url(#accentGradient)" filter="url(#innerShadow)"/>
+  <text x="665" y="580" text-anchor="middle" fill="white" font-family="SF Pro Display, -apple-system, sans-serif" font-size="16" font-weight="600">中文</text>
+  
+  <!-- Switching arrows/indicator above keyboard -->
+  <g transform="translate(512,320)">
+    <!-- Circular arrow indicating switching -->
+    <path d="M -40,0 A 40,40 0 1,1 35,20" stroke="rgba(255,255,255,0.8)" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M 30,15 L 40,20 L 30,25 Z" fill="rgba(255,255,255,0.8)"/>
+    
+    <path d="M 40,0 A 40,40 0 1,1 -35,-20" stroke="rgba(255,255,255,0.8)" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M -30,-25 L -40,-20 L -30,-15 Z" fill="rgba(255,255,255,0.8)"/>
+  </g>
+  
+  <!-- Small app windows icons in the top area to suggest app switching -->
+  <g opacity="0.4">
+    <!-- Window 1 -->
+    <rect x="200" y="200" width="80" height="60" rx="6" ry="6" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    <rect x="200" y="200" width="80" height="15" rx="6" ry="6" fill="rgba(255,255,255,0.3)"/>
+    
+    <!-- Window 2 -->
+    <rect x="320" y="180" width="80" height="60" rx="6" ry="6" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+    <rect x="320" y="180" width="80" height="15" rx="6" ry="6" fill="rgba(255,255,255,0.4)"/>
+    
+    <!-- Window 3 -->
+    <rect x="620" y="180" width="80" height="60" rx="6" ry="6" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    <rect x="620" y="180" width="80" height="15" rx="6" ry="6" fill="rgba(255,255,255,0.3)"/>
+    
+    <!-- Window 4 -->
+    <rect x="740" y="200" width="80" height="60" rx="6" ry="6" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+    <rect x="740" y="200" width="80" height="15" rx="6" ry="6" fill="rgba(255,255,255,0.4)"/>
+  </g>
+  
+  <!-- Subtle highlight on the main gradient background -->
+  <circle cx="512" cy="512" r="470" fill="none" stroke="url(#accentGradient)" stroke-width="2" opacity="0.6"/>
+</svg>
