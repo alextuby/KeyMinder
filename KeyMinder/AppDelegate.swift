@@ -1,6 +1,6 @@
 import Cocoa
 import Carbon
-import ApplicationServices
+import ServiceManagement
 
 
 // This functino catches all focus change notifications for apps
@@ -38,7 +38,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // Called on app launch
     func applicationDidFinishLaunching(_ notification: Notification) {
-        print("=== KeyboardManager Starting ===")
+        print("=== KeyMider Starting ===")
         if let window = NSApplication.shared.windows.first {
                 window.setIsVisible(false)
             }
@@ -82,7 +82,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
             }
         
-        print("KeyboardManager started successfully!")
+        setupAutoStart()
+        
+        print("KeyMider started successfully!")
     }
     
     // Test functions that I used to figure out what's possible in terms of
@@ -131,6 +133,36 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         print("--- End of Test ---")
     }
+    
+    func setupAutoStart() {
+        // Check if app should start at login
+        let autoStartEnabled = UserDefaults.standard.bool(forKey: "AutoStartEnabled")
+        setAutoStart(enabled: autoStartEnabled)
+    }
+    
+    func setAutoStart(enabled: Bool) {
+        let bundleIdentifier = Bundle.main.bundleIdentifier!
+        let appURL = Bundle.main.bundleURL
+        
+        if enabled {
+            // Add to login items
+            if SMLoginItemSetEnabled(bundleIdentifier as CFString, true) {
+                print("Successfully added to login items")
+            } else {
+                print("Failed to add to login items")
+            }
+        } else {
+            // Remove from login items
+            if SMLoginItemSetEnabled(bundleIdentifier as CFString, false) {
+                print("Successfully removed from login items")
+            } else {
+                print("Failed to remove from login items")
+            }
+        }
+        
+        UserDefaults.standard.set(enabled, forKey: "AutoStartEnabled")
+    }
+    
     
     // Sets up the status bar icon and menu
     func setupStatusBar() {
@@ -200,6 +232,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         menu.addItem(NSMenuItem.separator())
         
+        let autoStartEnabled = UserDefaults.standard.bool(forKey: "AutoStartEnabled")
+        let autoStartTitle = autoStartEnabled ? "Disable Auto-Start" : "Enable Auto-Start"
+        let autoStartItem = NSMenuItem(title: autoStartTitle, action: #selector(toggleAutoStart), keyEquivalent: "")
+        autoStartItem.target = self
+        autoStartItem.tag = 2
+        menu.addItem(autoStartItem)
+        
+        menu.addItem(NSMenuItem.separator())
+        
         // Clear all mappings
         let clearItem = NSMenuItem(title: "Clear All Mappings", action: #selector(clearMappings), keyEquivalent: "")
         clearItem.target = self
@@ -253,6 +294,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Rebuild menu to update checkmarks
         setupMenu()
+    }
+    
+    @objc func toggleAutoStart() {
+        let currentState = UserDefaults.standard.bool(forKey: "AutoStartEnabled")
+        let newState = !currentState
+        
+        setAutoStart(enabled: newState)
+        
+        // Update menu item title
+        if let menu = statusItem?.menu,
+           let autoStartItem = menu.items.first(where: { $0.tag == 2 }) {
+            autoStartItem.title = newState ? "Disable Auto-Start" : "Enable Auto-Start"
+        }
     }
     
     @objc func clearMappings() {
@@ -309,7 +363,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     let alert = NSAlert()
                     alert.messageText = "Accessibility Access Required"
                     alert.informativeText = """
-                    KeyboardManager needs accessibility access to monitor window changes.
+                    KeyMider needs accessibility access to monitor window changes.
                     
                     If the app doesn't appear in the list:
                     1. Click the '+' button in Accessibility preferences
@@ -486,7 +540,7 @@ class WindowMonitor {
     var expectedInputSourceID: String?
     
 
-    private let mappingQueue = DispatchQueue(label: "com.keyboardmanager.mappings", attributes: .concurrent)
+    private let mappingQueue = DispatchQueue(label: "com.KeyMider.mappings", attributes: .concurrent)
     private var _inputSourceMappings: [String: TISInputSource] = [:]
     private var currentIdentifier: String?
 
