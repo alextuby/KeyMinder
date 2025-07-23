@@ -3,6 +3,7 @@ import Carbon
 import ServiceManagement
 
 
+
 // This functino catches all focus change notifications for apps
 // we subscribe to below.
 // It then launches the handleFocusChange function that figures out
@@ -82,7 +83,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
             }
         
-        setupAutoStart()
+        if let bundleID = Bundle.main.bundleIdentifier {
+            let success = SMLoginItemSetEnabled(bundleID as CFString, true)
+            print(success ? "✅ Launch at login enabled." : "❌ Failed to enable launch at login.")
+        } else {
+            print("❌ Could not get bundle identifier.")
+        }
         
         print("KeyMider started successfully!")
     }
@@ -132,35 +138,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             print("[TEST] ❌ FAILED to add notification. Error code: \(addResult.rawValue)")
         }
         print("--- End of Test ---")
-    }
-    
-    func setupAutoStart() {
-        // Check if app should start at login
-        let autoStartEnabled = UserDefaults.standard.bool(forKey: "AutoStartEnabled")
-        setAutoStart(enabled: autoStartEnabled)
-    }
-    
-    func setAutoStart(enabled: Bool) {
-        let bundleIdentifier = Bundle.main.bundleIdentifier!
-        let appURL = Bundle.main.bundleURL
-        
-        if enabled {
-            // Add to login items
-            if SMLoginItemSetEnabled(bundleIdentifier as CFString, true) {
-                print("Successfully added to login items")
-            } else {
-                print("Failed to add to login items")
-            }
-        } else {
-            // Remove from login items
-            if SMLoginItemSetEnabled(bundleIdentifier as CFString, false) {
-                print("Successfully removed from login items")
-            } else {
-                print("Failed to remove from login items")
-            }
-        }
-        
-        UserDefaults.standard.set(enabled, forKey: "AutoStartEnabled")
     }
     
     
@@ -232,12 +209,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         menu.addItem(NSMenuItem.separator())
         
-        let autoStartEnabled = UserDefaults.standard.bool(forKey: "AutoStartEnabled")
-        let autoStartTitle = autoStartEnabled ? "Disable Auto-Start" : "Enable Auto-Start"
-        let autoStartItem = NSMenuItem(title: autoStartTitle, action: #selector(toggleAutoStart), keyEquivalent: "")
-        autoStartItem.target = self
-        autoStartItem.tag = 2
-        menu.addItem(autoStartItem)
+//        let autoStartEnabled = UserDefaults.standard.bool(forKey: "AutoStartEnabled")
+//        let autoStartTitle = autoStartEnabled ? "Disable Auto-Start" : "Enable Auto-Start"
+//        let autoStartItem = NSMenuItem(title: autoStartTitle, action: #selector(toggleAutoStart), keyEquivalent: "")
+//        autoStartItem.target = self
+//        autoStartItem.tag = 2
+//        menu.addItem(autoStartItem)
         
         menu.addItem(NSMenuItem.separator())
         
@@ -296,19 +273,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         setupMenu()
     }
     
-    @objc func toggleAutoStart() {
-        let currentState = UserDefaults.standard.bool(forKey: "AutoStartEnabled")
-        let newState = !currentState
-        
-        setAutoStart(enabled: newState)
-        
-        // Update menu item title
-        if let menu = statusItem?.menu,
-           let autoStartItem = menu.items.first(where: { $0.tag == 2 }) {
-            autoStartItem.title = newState ? "Disable Auto-Start" : "Enable Auto-Start"
-        }
-    }
-    
     @objc func clearMappings() {
         windowMonitor.clearMappings()
         print("All mappings cleared")
@@ -357,34 +321,34 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
             let promptResult = AXIsProcessTrustedWithOptions(options as CFDictionary)
             
-            if !promptResult {
-                // Show additional alert with instructions
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    let alert = NSAlert()
-                    alert.messageText = "Accessibility Access Required"
-                    alert.informativeText = """
-                    KeyMider needs accessibility access to monitor window changes.
-                    
-                    If the app doesn't appear in the list:
-                    1. Click the '+' button in Accessibility preferences
-                    2. Navigate to your app and add it manually
-                    3. Make sure the checkbox is checked
-                    
-                    Then restart the app.
-                    """
-                    alert.addButton(withTitle: "Open System Preferences")
-                    alert.addButton(withTitle: "Quit App")
-                    
-                    if alert.runModal() == .alertFirstButtonReturn {
-                        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
-                    }
-                    
-                    // Give user time to set permissions, then quit
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        NSApplication.shared.terminate(nil)
-                    }
-                }
-            }
+//            if !promptResult {
+//                // Show additional alert with instructions
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+//                    let alert = NSAlert()
+//                    alert.messageText = "Accessibility Access Required"
+//                    alert.informativeText = """
+//                    KeyMider needs accessibility access to monitor window changes.
+//                    
+//                    If the app doesn't appear in the list:
+//                    1. Click the '+' button in Accessibility preferences
+//                    2. Navigate to your app and add it manually
+//                    3. Make sure the checkbox is checked
+//                    
+//                    Then restart the app.
+//                    """
+//                    alert.addButton(withTitle: "Open System Preferences")
+//                    alert.addButton(withTitle: "Quit App")
+//                    
+//                    if alert.runModal() == .alertFirstButtonReturn {
+//                        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
+//                    }
+//                    
+//                    // Give user time to set permissions, then quit
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                        NSApplication.shared.terminate(nil)
+//                    }
+//                }
+//            }
         }
     }
 }
