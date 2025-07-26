@@ -6,7 +6,7 @@
 
 ## ✨ Features
 
-- 📦 Tracks input source **per app** or **per window**
+- 📦 Tracks input source of applications
 - 🔄 Automatically switches keyboard layout based on focus
 - 🧠 Remembers your last used input source for each app/window
 - 🌐 Simple macOS menu bar interface
@@ -26,7 +26,7 @@
    - Add the app if it's not listed
    - Ensure the checkbox is enabled
 4. The KeyMinder icon will appear in your macOS menu bar.
-5. Choose your **default input source** and toggle between **per-app** or **per-window** mode.
+5. Choose your **default input source**.
 
 ---
 
@@ -80,5 +80,4 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Author
 
-**Oleksandr Tubolets**  
-Feel free to open issues or suggestions via GitHub.
+**Oleksandr Tubolets**
