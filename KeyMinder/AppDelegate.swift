@@ -83,12 +83,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
             }
         
-        if let bundleID = Bundle.main.bundleIdentifier {
-            let success = SMLoginItemSetEnabled(bundleID as CFString, true)
-            print(success ? "✅ Launch at login enabled." : "❌ Failed to enable launch at login.")
-        } else {
-            print("❌ Could not get bundle identifier.")
-        }
+//        if let bundleID = Bundle.main.bundleIdentifier {
+//            let success = SMLoginItemSetEnabled(bundleID as CFString, true)
+//            print(success ? "✅ Launch at login enabled." : "❌ Failed to enable launch at login.")
+//        } else {
+//            print("❌ Could not get bundle identifier.")
+//        }
+        maybeInstallLaunchAgent()
         
         print("KeyMider started successfully!")
     }
@@ -140,6 +141,44 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         print("--- End of Test ---")
     }
     
+    
+    func maybeInstallLaunchAgent() {
+            let label = "com.alextuby.KeyMinder"
+            let plistPath = FileManager.default.homeDirectoryForCurrentUser
+                .appendingPathComponent("Library/LaunchAgents/\(label).plist")
+
+            if FileManager.default.fileExists(atPath: plistPath.path) {
+                print("🚫 LaunchAgent already exists, skipping installation.")
+                return
+            }
+
+            installLaunchAgent(label: label)
+        }
+
+    func installLaunchAgent(label: String) {
+        let launchAgentDir = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/LaunchAgents")
+        let plistURL = launchAgentDir.appendingPathComponent("\(label).plist")
+        guard let executablePath = Bundle.main.executablePath else {
+            print("❌ Could not determine executable path")
+            return
+        }
+
+        let plist: [String: Any] = [
+            "Label": label,
+            "ProgramArguments": [executablePath],
+            "RunAtLoad": true,
+            "KeepAlive": false
+        ]
+
+        do {
+            try FileManager.default.createDirectory(at: launchAgentDir, withIntermediateDirectories: true)
+            let data = try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
+            try data.write(to: plistURL)
+            print("✅ LaunchAgent installed at \(plistURL.path)")
+        } catch {
+            print("❌ Failed to install LaunchAgent: \(error)")
+        }
+    }
     
     // Sets up the status bar icon and menu
     func setupStatusBar() {
@@ -208,13 +247,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(modeItem)
         
         menu.addItem(NSMenuItem.separator())
-        
-//        let autoStartEnabled = UserDefaults.standard.bool(forKey: "AutoStartEnabled")
-//        let autoStartTitle = autoStartEnabled ? "Disable Auto-Start" : "Enable Auto-Start"
-//        let autoStartItem = NSMenuItem(title: autoStartTitle, action: #selector(toggleAutoStart), keyEquivalent: "")
-//        autoStartItem.target = self
-//        autoStartItem.tag = 2
-//        menu.addItem(autoStartItem)
         
         menu.addItem(NSMenuItem.separator())
         
@@ -321,7 +353,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
             let promptResult = AXIsProcessTrustedWithOptions(options as CFDictionary)
             
-//            if !promptResult {
+            if !promptResult {
 //                // Show additional alert with instructions
 //                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
 //                    let alert = NSAlert()
@@ -344,10 +376,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //                    }
 //                    
 //                    // Give user time to set permissions, then quit
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//                        NSApplication.shared.terminate(nil)
-//                    }
-//                }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        NSApplication.shared.terminate(nil)
+                    }
+                }
 //            }
         }
     }
