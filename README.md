@@ -4,6 +4,13 @@
 
 ---
 
+**Disclaimer**:
+I'm not really a developer. Especially not for macOS. I don't even like macOS.
+This product is the result of combined efforts of several LLMs with me as a judge and frustration with some default macOS functionality.
+I really hope it'll help other as it helped me.
+
+---
+
 ## ✨ Features
 
 - 📦 Tracks input source of applications
@@ -73,6 +80,15 @@ KeyMinder relies on macOS Accessibility APIs to detect app/window focus. You **m
 KeyMinder installs a `LaunchAgent` plist file in:
 ~/Library/LaunchAgents/com.alextuby.KeyMinder.plist
 
+---
+
+## Known issues
+
+This app relies on the AXFocus change which is mechanism within macOS to track which window has the focus now.
+This mechanism doesn't always work well. While it's reliable with "regural" app, some apps like Spotlight have these floating windows. And while the focus really changes there's no notification about it.
+In some other cases there's notification when this floating window gets the focus but no notification when it switches back.
+
+---
 
 ## License
 
